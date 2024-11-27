@@ -1,6 +1,6 @@
-package com.kafkaSpringBootEx.config;
+package com.app.kafka.config;
 
-import com.kafkaSpringBootEx.entities.Student;
+import com.app.kafka.entities.Student;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;

@@ -1,7 +1,7 @@
-package com.kafkaSpringBootEx.controller;
+package com.app.kafka.controller;
 
-import com.kafkaSpringBootEx.entities.Student;
-import com.kafkaSpringBootEx.service.producer.KafkaSender;
+import com.app.kafka.entities.Student;
+import com.app.kafka.service.producer.KafkaSender;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +18,7 @@ public class KafkaController {
 
     @PostMapping("/send")
     public String sendMessage() {
-        kafkaSender.sendMessage(new Student("wdadwa", "wadwadwd", 1));
+        kafkaSender.sendMessage(new Student("wdadwa", "wadwadwd", 2,100000));
         return "Message was successfully sent to Kafka!";
     }
 }

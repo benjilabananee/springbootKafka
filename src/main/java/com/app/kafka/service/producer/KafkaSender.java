@@ -1,6 +1,6 @@
-package com.kafkaSpringBootEx.service.producer;
+package com.app.kafka.service.producer;
 
-import com.kafkaSpringBootEx.entities.Student;
+import com.app.kafka.entities.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;

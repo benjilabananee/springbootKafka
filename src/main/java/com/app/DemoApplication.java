@@ -1,4 +1,4 @@
-package com.kafkaSpringBootEx;
+package com.app;
 
 
 import org.springframework.boot.SpringApplication;
