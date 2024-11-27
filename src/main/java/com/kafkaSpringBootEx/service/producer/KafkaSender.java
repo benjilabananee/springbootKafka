@@ -1,4 +1,4 @@
-package com.kafkaSpringBootEx.service;
+package com.kafkaSpringBootEx.service.producer;
 
 import com.kafkaSpringBootEx.entities.Student;
 import org.springframework.beans.factory.annotation.Autowired;

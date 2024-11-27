@@ -1,9 +1,8 @@
 package com.kafkaSpringBootEx.controller;
 
 import com.kafkaSpringBootEx.entities.Student;
-import com.kafkaSpringBootEx.service.KafkaSender;
+import com.kafkaSpringBootEx.service.producer.KafkaSender;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
