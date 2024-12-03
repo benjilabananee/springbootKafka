@@ -55,6 +55,16 @@
 			<artifactId>modelmapper</artifactId>
 			<version>3.2.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.kafkaSpringBootEx</groupId>
+			<artifactId>KafkaProjectSpringBoot</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
+			<version>1.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -1,6 +1,7 @@
 package com.app.kafka.config;
 
-import com.app.kafka.entities.Student;
+
+import com.app.utils.tickers.TickersMetaData;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -18,15 +19,15 @@ import java.util.Map;
 public class KafkaConsumerConfig {
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Student> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Student> factory =
+    public ConcurrentKafkaListenerContainerFactory<String, TickersMetaData> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, TickersMetaData> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
 
     @Bean
-    public DefaultKafkaConsumerFactory<String, Student> consumerFactory() {
+    public DefaultKafkaConsumerFactory<String, TickersMetaData> consumerFactory() {
         Map<String, Object> config = new HashMap<>();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         config.put(ConsumerConfig.GROUP_ID_CONFIG, "student-group");
@@ -34,6 +35,6 @@ public class KafkaConsumerConfig {
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         config.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
 
-        return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(), new JsonDeserializer<>(Student.class));
+        return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(), new JsonDeserializer<>(TickersMetaData.class));
     }
 }
