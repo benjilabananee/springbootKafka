@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "meta",
     "body"
 })
+
 @Generated("jsonschema2pojo")
 public class TickersMetaData implements Serializable
 {

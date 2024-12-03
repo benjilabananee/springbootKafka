@@ -1,6 +1,6 @@
 package com.app.kafka.config;
 
-import com.app.kafka.entities.Student;
+import com.app.utils.tickers.TickersMetaData;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class KafkaProducerConfig {
 
     @Bean
-    public ProducerFactory<String, Student> producerFactory() {
+    public ProducerFactory<String, TickersMetaData> producerFactory() {
         Map<String, Object> config = new HashMap<>();
 
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
@@ -28,7 +28,7 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, Student> kafkaTemplate() {
+    public KafkaTemplate<String, TickersMetaData> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }
