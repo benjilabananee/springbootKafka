@@ -22,7 +22,7 @@ public class TickerMetaDataConsumer {
         this.objectMapper = objectMapper;
     }
 
-    @KafkaListener(topics = "TickerMetaData", groupId = "student-group", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "tickerMetaData", groupId = "student-group", containerFactory = "kafkaListenerContainerFactory")
     public void consume(TickersMetaData tickers) {
 
         TickersMetaData tickersMetaData = objectMapper.convertValue(tickers, TickersMetaData.class);

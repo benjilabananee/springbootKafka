@@ -35,9 +35,10 @@ public class KafkaController {
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
         ObjectMapper mapper = new ObjectMapper();
-        TickersMetaData quoteResponse = mapper.readValue(response.body(), TickersMetaData.class);
+        TickersMetaData tickersMetaData = mapper.readValue(response.body(), TickersMetaData.class);
 
-        kafkaSender.sendMessage(quoteResponse);
+        kafkaSender.sendMessage(tickersMetaData);
+
         return "Message was successfully sent to Kafka!";
     }
 }
