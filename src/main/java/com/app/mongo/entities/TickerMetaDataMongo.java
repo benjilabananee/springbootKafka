@@ -1,5 +1,6 @@
 package com.app.mongo.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,9 +10,10 @@ public class TickerMetaDataMongo {
     @Id
     private String symbol;
     private String name;
-    private String lastsale;
-    private String netChange;
-    private String pctchange;
+    private Double lastsale;
+    private String currency;
+    private Double netChange;
+    private Double pctchange;
     private String marketCap;
 
     public String getSymbol() {return symbol;}
@@ -20,14 +22,17 @@ public class TickerMetaDataMongo {
     public String getName() {return name;}
     public void setName(String name) {this.name = name;}
 
-    public String getLastsale() {return lastsale;}
-    public void setLastsale(String lastsale) {this.lastsale = lastsale;}
+    public Double getLastsale() {return lastsale;}
+    public void setLastsale(Double lastsale) {this.lastsale = lastsale;}
 
-    public String getNetChange() {return netChange;}
-    public void setNetChange(String netChange) {this.netChange = netChange;}
+    public String getCurrency() {return currency;}
+    public void setCurrency(String currency) {this.currency = currency;}
 
-    public String getPctchange() {return pctchange;}
-    public void setPctchange(String pctchange) {this.pctchange = pctchange;}
+    public Double getNetChange() {return netChange;}
+    public void setNetChange(Double netChange) {this.netChange = netChange;}
+
+    public Double getPctchange() {return pctchange;}
+    public void setPctchange(Double pctchange) {this.pctchange = pctchange;}
 
     public String getMarketCap() {return marketCap;}
     public void setMarketCap(String marketCap) {this.marketCap = marketCap;}

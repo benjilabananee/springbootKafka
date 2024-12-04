@@ -1,5 +1,6 @@
 package com.app.kafka.service.listener;
 
+import com.app.mongo.service.TreatmentOfDataService;
 import com.app.utils.tickers.Body;
 import com.app.utils.tickers.TickersMetaData;
 import com.app.mongo.entities.TickerMetaDataMongo;
@@ -15,10 +16,12 @@ import java.util.List;
 public class TickerMetaDataConsumer {
 
     private final TickerMetaDataService tickerMetaDataService;
+    private final TreatmentOfDataService treatmentOfDataService;
     private final ObjectMapper objectMapper;
 
-    public TickerMetaDataConsumer(TickerMetaDataService studentService, ObjectMapper objectMapper) {
+    public TickerMetaDataConsumer(TickerMetaDataService studentService, TreatmentOfDataService treatmentOfDataService, ObjectMapper objectMapper) {
         this.tickerMetaDataService = studentService;
+        this.treatmentOfDataService = treatmentOfDataService;
         this.objectMapper = objectMapper;
     }
 
@@ -29,7 +32,18 @@ public class TickerMetaDataConsumer {
         List<Body> bodies = tickersMetaData.getBody();
 
         for(Body body : bodies){
-            tickerMetaDataService.saveData(objectMapper.convertValue(body,TickerMetaDataMongo.class));
+
+            TickerMetaDataMongo tickerMetaDataMongo = new TickerMetaDataMongo();
+            tickerMetaDataMongo.setName(body.getName());
+            tickerMetaDataMongo.setSymbol(body.getSymbol());
+            tickerMetaDataMongo.setNetChange(treatmentOfDataService.convertStringIntoNumberFormat(body.getNetchange()));
+            tickerMetaDataMongo.setPctchange(treatmentOfDataService.convertStringIntoNumberFormat(body.getPctchange()));
+            tickerMetaDataMongo.setLastsale(treatmentOfDataService.convertStringIntoNumberFormat(body.getLastsale()));
+            tickerMetaDataMongo.setCurrency(treatmentOfDataService.extractCurrencyFromInput(body.getLastsale()));
+            tickerMetaDataMongo.setMarketCap(body.getMarketCap());
+
+            tickerMetaDataService.saveData(tickerMetaDataMongo);
+
         }
 
 
