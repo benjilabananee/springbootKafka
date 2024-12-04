@@ -12,17 +12,12 @@ public class TickerMetaDataService {
 
     private final TickerRepository tickerRepository;
 
-    @Autowired
     public TickerMetaDataService(TickerRepository tickerRepository) {
         this.tickerRepository = tickerRepository;
     }
-
 
     public void saveData(TickerMetaDataMongo studentMongo) {
         tickerRepository.save(studentMongo);
     }
 
-    public void saveAllData(List<TickerMetaDataMongo> tickersMetada) {
-        tickerRepository.saveAll(tickersMetada);
-    }
 }
