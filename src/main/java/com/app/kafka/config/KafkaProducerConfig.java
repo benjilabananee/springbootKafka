@@ -1,7 +1,7 @@
 package com.app.kafka.config;
 
-import com.app.kafka.utils.tickersLastOpp.TickersLastOpp;
-import com.app.kafka.utils.tickersMetaData.TickersMetadata;
+import com.app.kafka.utils.schema.tickersLastOpp.TickersLastOpp;
+import com.app.kafka.utils.schema.tickersMetaData.TickersMetadata;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;

@@ -1,5 +1,5 @@
 
-package com.app.kafka.utils.tickersMetaData;
+package com.app.kafka.utils.schema.tickersMetaData;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

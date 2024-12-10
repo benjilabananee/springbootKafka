@@ -1,7 +1,7 @@
 package com.app.kafka.service.producer;
 
-import com.app.kafka.utils.tickersLastOpp.TickersLastOpp;
-import com.app.kafka.utils.tickersMetaData.TickersMetadata;
+import com.app.kafka.utils.schema.tickersLastOpp.TickersLastOpp;
+import com.app.kafka.utils.schema.tickersMetaData.TickersMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;

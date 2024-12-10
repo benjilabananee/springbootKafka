@@ -1,8 +1,8 @@
 package com.app.controller;
 
-import com.app.kafka.utils.tickersLastOpp.TickersLastOpp;
+import com.app.kafka.utils.schema.tickersLastOpp.TickersLastOpp;
 import com.app.kafka.service.producer.KafkaSender;
-import com.app.kafka.utils.tickersMetaData.TickersMetadata;
+import com.app.kafka.utils.schema.tickersMetaData.TickersMetadata;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,8 +1,7 @@
 
-package com.app.kafka.utils.tickersMetaData;
+package com.app.kafka.utils.schema.tickersMetaData;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import javax.annotation.Generated;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -14,37 +13,37 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "meta",
-    "body"
+    "searchTerm",
+    "processedTime"
 })
 @Generated("jsonschema2pojo")
-public class TickersMetadata {
+public class Meta {
 
-    @JsonProperty("meta")
-    private Meta meta;
-    @JsonProperty("body")
-    private List<Body> body;
+    @JsonProperty("searchTerm")
+    private String searchTerm;
+    @JsonProperty("processedTime")
+    private String processedTime;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
-    @JsonProperty("meta")
-    public Meta getMeta() {
-        return meta;
+    @JsonProperty("searchTerm")
+    public String getSearchTerm() {
+        return searchTerm;
     }
 
-    @JsonProperty("meta")
-    public void setMeta(Meta meta) {
-        this.meta = meta;
+    @JsonProperty("searchTerm")
+    public void setSearchTerm(String searchTerm) {
+        this.searchTerm = searchTerm;
     }
 
-    @JsonProperty("body")
-    public List<Body> getBody() {
-        return body;
+    @JsonProperty("processedTime")
+    public String getProcessedTime() {
+        return processedTime;
     }
 
-    @JsonProperty("body")
-    public void setBody(List<Body> body) {
-        this.body = body;
+    @JsonProperty("processedTime")
+    public void setProcessedTime(String processedTime) {
+        this.processedTime = processedTime;
     }
 
     @JsonAnyGetter

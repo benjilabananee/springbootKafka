@@ -1,8 +1,8 @@
 package com.app.kafka.service.listener;
 
 import com.app.mongo.service.TreatmentOfDataService;
-import com.app.kafka.utils.tickersLastOpp.Body;
-import com.app.kafka.utils.tickersLastOpp.TickersLastOpp;
+import com.app.kafka.utils.schema.tickersLastOpp.Body;
+import com.app.kafka.utils.schema.tickersLastOpp.TickersLastOpp;
 import com.app.mongo.entities.TickersLastOppMongo;
 import com.app.mongo.service.TickerLastOppService;
 import com.fasterxml.jackson.databind.ObjectMapper;

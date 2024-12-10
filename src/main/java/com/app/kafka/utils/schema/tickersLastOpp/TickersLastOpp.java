@@ -1,5 +1,5 @@
 
-package com.app.kafka.utils.tickersLastOpp;
+package com.app.kafka.utils.schema.tickersLastOpp;
 
 import java.io.Serializable;
 import java.util.List;

@@ -1,5 +1,5 @@
 
-package com.app.kafka.utils.tickersLastOpp;
+package com.app.kafka.utils.schema.tickersLastOpp;
 
 import java.io.Serializable;
 import javax.annotation.Generated;
@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "marketCap"
 })
 @Generated("jsonschema2pojo")
-public class Body implements Serializable
+public class Headers implements Serializable
 {
 
     @JsonProperty("symbol")
@@ -32,7 +32,7 @@ public class Body implements Serializable
     private String pctchange;
     @JsonProperty("marketCap")
     private String marketCap;
-    private final static long serialVersionUID = -4100261129568479671L;
+    private final static long serialVersionUID = 1232306929300408090L;
 
     @JsonProperty("symbol")
     public String getSymbol() {
