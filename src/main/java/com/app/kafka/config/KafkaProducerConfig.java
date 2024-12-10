@@ -1,6 +1,7 @@
 package com.app.kafka.config;
 
-import com.app.utils.tickers.TickersMetaData;
+import com.app.kafka.utils.tickersLastOpp.TickersLastOpp;
+import com.app.kafka.utils.tickersMetaData.TickersMetadata;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +18,7 @@ import java.util.Map;
 public class KafkaProducerConfig {
 
     @Bean
-    public ProducerFactory<String, TickersMetaData> producerFactory() {
+    public ProducerFactory<String, TickersLastOpp> producerFactory() {
         Map<String, Object> config = new HashMap<>();
 
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
@@ -28,7 +29,27 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, TickersMetaData> kafkaTemplate() {
+    public KafkaTemplate<String, TickersLastOpp> kafkaTickerLastOppTemplate() {
         return new KafkaTemplate<>(producerFactory());
+    }
+
+
+
+    ///////////////////////////////producer for TickerMetadata///////////////////////////////
+
+    @Bean
+    public ProducerFactory<String, TickersMetadata> tickerMetaDataProducerFactory() {
+        Map<String, Object> config = new HashMap<>();
+
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+
+        return new DefaultKafkaProducerFactory<>(config);
+    }
+
+    @Bean
+    public KafkaTemplate<String, TickersMetadata> tickerMetaDataKafkaTemplate() {
+        return new KafkaTemplate<>(tickerMetaDataProducerFactory());
     }
 }

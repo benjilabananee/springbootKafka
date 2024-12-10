@@ -1,7 +1,7 @@
 package com.app.kafka.config;
 
 
-import com.app.utils.tickers.TickersMetaData;
+import com.app.kafka.utils.tickersLastOpp.TickersLastOpp;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -19,22 +19,45 @@ import java.util.Map;
 public class KafkaConsumerConfig {
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, TickersMetaData> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, TickersMetaData> factory =
+    public ConcurrentKafkaListenerContainerFactory<String, TickersLastOpp> kafkaListenerLastOppContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, TickersLastOpp> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory());
+        factory.setConsumerFactory(consumerLastOppFactory());
         return factory;
     }
 
     @Bean
-    public DefaultKafkaConsumerFactory<String, TickersMetaData> consumerFactory() {
+    public DefaultKafkaConsumerFactory<String, TickersLastOpp> consumerLastOppFactory() {
         Map<String, Object> config = new HashMap<>();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        config.put(ConsumerConfig.GROUP_ID_CONFIG, "student-group");
+        config.put(ConsumerConfig.GROUP_ID_CONFIG, "tickers_last_opp");
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         config.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
 
-        return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(), new JsonDeserializer<>(TickersMetaData.class));
+        return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(), new JsonDeserializer<>(TickersLastOpp.class));
     }
+
+    ///////////////////////second topic config////////////////////////////
+
+//    @Bean
+//    public ConcurrentKafkaListenerContainerFactory<String, OddTpp> MetadataTickerKafkaListenerContainerFactory() {
+//        ConcurrentKafkaListenerContainerFactory<String, OddTpp> factory =
+//                new ConcurrentKafkaListenerContainerFactory<>();
+//        factory.setConsumerFactory(MetadataConsumerFactory());
+//        return factory;
+//    }
+//
+//    @Bean
+//    public DefaultKafkaConsumerFactory<String, OddTpp> MetadataConsumerFactory() {
+//        Map<String, Object> config = new HashMap<>();
+//        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+//        config.put(ConsumerConfig.GROUP_ID_CONFIG, "student-group-topic2");
+//        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+//        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+//        config.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+//
+//        return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(), new JsonDeserializer<>(OddTpp.class));
+
+
 }

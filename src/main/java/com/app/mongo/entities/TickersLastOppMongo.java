@@ -1,11 +1,10 @@
 package com.app.mongo.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class TickerMetaDataMongo {
+public class TickersLastOppMongo {
 
     @Id
     private String symbol;

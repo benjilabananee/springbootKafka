@@ -1,5 +1,5 @@
 
-package com.app.utils.tickers;
+package com.app.kafka.utils.tickersLastOpp;
 
 import java.io.Serializable;
 import javax.annotation.Generated;
