@@ -21,7 +21,6 @@ public class KafkaSender {
         System.out.println("Message sent: " + tickersLastOpp);
     }
 
-
     public void sendTickerMetaDataOppMessage(TickersMetadata tickersMetadata) {
         kafkaTickerMetadataTemplate.send("METADATA", tickersMetadata);
         System.out.println("Message sent: " + tickersMetadata);

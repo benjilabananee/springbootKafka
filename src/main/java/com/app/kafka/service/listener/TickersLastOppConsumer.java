@@ -25,7 +25,7 @@ public class TickersLastOppConsumer {
         this.objectMapper = objectMapper;
     }
 
-    @KafkaListener(topics = "tickers_last_opp", groupId = "student-group", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "tickers_last_opp", groupId = "tickers_last_opp", containerFactory = "kafkaListenerLastOppContainerFactory")
     public void consume(TickersLastOpp tickers) {
 
         TickersLastOpp tickersLastOpp = objectMapper.convertValue(tickers, TickersLastOpp.class);
