@@ -19,17 +19,22 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, TickersLastOpp> kafkaListenerLastOppContainerFactory() {
+        return createKafkaListenerLastOppContainerFactory("group_id");
+    }
+
+
+    public ConcurrentKafkaListenerContainerFactory<String, TickersLastOpp> createKafkaListenerLastOppContainerFactory(String groupId) {
         ConcurrentKafkaListenerContainerFactory<String, TickersLastOpp> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerLastOppFactory());
+        factory.setConsumerFactory(consumerLastOppFactory(groupId));
         return factory;
     }
 
-    @Bean
-    public DefaultKafkaConsumerFactory<String, TickersLastOpp> consumerLastOppFactory() {
+
+    public DefaultKafkaConsumerFactory<String, TickersLastOpp> consumerLastOppFactory(String groupId) {
         Map<String, Object> config = new HashMap<>();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        config.put(ConsumerConfig.GROUP_ID_CONFIG, "tickers_last_opp");
+        config.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         config.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
@@ -38,20 +43,22 @@ public class KafkaConsumerConfig {
     }
 
     //////////////////////////////////second topic config//////////////////////////////////////////////
-
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, TickersMetadata> MetadataTickerKafkaListenerContainerFactory() {
+    public ConcurrentKafkaListenerContainerFactory<String, TickersMetadata> metadataTickerKafkaListenerContainerFactory() {
+        return createKafkaListenerContainerFactory("group_id"); // Set a default groupId
+    }
+
+    public ConcurrentKafkaListenerContainerFactory<String, TickersMetadata> createKafkaListenerContainerFactory(String groupId) {
         ConcurrentKafkaListenerContainerFactory<String, TickersMetadata> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(MetadataConsumerFactory());
+        factory.setConsumerFactory(metadataConsumerFactory(groupId));
         return factory;
     }
 
-    @Bean
-    public DefaultKafkaConsumerFactory<String, TickersMetadata> MetadataConsumerFactory() {
+    public DefaultKafkaConsumerFactory<String, TickersMetadata> metadataConsumerFactory(String groupId) {
         Map<String, Object> config = new HashMap<>();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        config.put(ConsumerConfig.GROUP_ID_CONFIG, "meta_data_group");
+        config.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         config.put(JsonDeserializer.TRUSTED_PACKAGES, "*");

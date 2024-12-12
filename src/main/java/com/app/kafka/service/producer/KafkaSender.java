@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class KafkaSender {
 
-    private static final String TOPIC = "tickers_last_opp";
+    private static final String LAST_OPP_TOPIC = "tickers_last_opp";
+    private static final String METADATA_TOPIC = "METADATA";
 
     @Autowired
     private KafkaTemplate<String, TickersLastOpp> kafkaTickersLastOppTemplate;
@@ -17,12 +18,12 @@ public class KafkaSender {
     private KafkaTemplate<String, TickersMetadata> kafkaTickerMetadataTemplate;
 
     public void sendTickerLastOppMessage(TickersLastOpp tickersLastOpp) {
-        kafkaTickersLastOppTemplate.send(TOPIC, tickersLastOpp);
+        kafkaTickersLastOppTemplate.send(LAST_OPP_TOPIC, tickersLastOpp);
         System.out.println("Message sent: " + tickersLastOpp);
     }
 
     public void sendTickerMetaDataOppMessage(TickersMetadata tickersMetadata) {
-        kafkaTickerMetadataTemplate.send("METADATA", tickersMetadata);
+        kafkaTickerMetadataTemplate.send(METADATA_TOPIC, tickersMetadata);
         System.out.println("Message sent: " + tickersMetadata);
     }
 
