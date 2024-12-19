@@ -80,8 +80,6 @@ public class KafkaController {
             return "Failed to send message to Kafka: " + e.getMessage();
         }
     }
-
-
     private String sendHttpRequest(String url) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))

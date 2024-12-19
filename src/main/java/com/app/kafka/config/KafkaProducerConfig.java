@@ -4,6 +4,7 @@ import com.app.kafka.utils.schema.tickersLastOpp.TickersLastOpp;
 import com.app.kafka.utils.schema.tickersMetaData.TickersMetadata;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
@@ -17,39 +18,24 @@ import java.util.Map;
 @Configuration
 public class KafkaProducerConfig {
 
-    @Bean
-    public ProducerFactory<String, TickersLastOpp> producerFactory() {
-        Map<String, Object> config = new HashMap<>();
+    @Value("${kafka.bootstrap-servers}")
+    private String bootstrapServers;
 
-        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+    public <T> ProducerFactory<String, T> createProducerFactory(Class<T> valueType) {
+        Map<String, Object> config = new HashMap<>();
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-
         return new DefaultKafkaProducerFactory<>(config);
     }
 
     @Bean
     public KafkaTemplate<String, TickersLastOpp> kafkaTickerLastOppTemplate() {
-        return new KafkaTemplate<>(producerFactory());
-    }
-
-
-
-    ///////////////////////////////producer for TickerMetadata///////////////////////////////
-
-    @Bean
-    public ProducerFactory<String, TickersMetadata> tickerMetaDataProducerFactory() {
-        Map<String, Object> config = new HashMap<>();
-
-        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-
-        return new DefaultKafkaProducerFactory<>(config);
+        return new KafkaTemplate<>(createProducerFactory(TickersLastOpp.class));
     }
 
     @Bean
     public KafkaTemplate<String, TickersMetadata> tickerMetaDataKafkaTemplate() {
-        return new KafkaTemplate<>(tickerMetaDataProducerFactory());
+        return new KafkaTemplate<>(createProducerFactory(TickersMetadata.class));
     }
 }
