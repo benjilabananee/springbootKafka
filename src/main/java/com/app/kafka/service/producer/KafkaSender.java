@@ -26,6 +26,4 @@ public class KafkaSender {
         kafkaTickerMetadataTemplate.send(METADATA_TOPIC, tickersMetadata);
         System.out.println("Message sent: " + tickersMetadata);
     }
-
-
 }

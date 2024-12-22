@@ -30,8 +30,5 @@ public class TickersMetadataConsumer {
         for(Body body : bodies){
             tickerMetadataService.saveTickerMetadata(objectMapper.convertValue(body, TickerMetaDataMongo.class));
         }
-
-
-        System.out.println(bodies.get(0).getSymbol() + "!!!!!!!!!!!!!!");
     }
 }

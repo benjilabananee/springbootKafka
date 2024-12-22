@@ -40,11 +40,11 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, TickersLastOpp> kafkaListenerLastOppContainerFactory() {
-        return createKafkaListenerContainerFactory("group_id", TickersLastOpp.class);
+        return createKafkaListenerContainerFactory("group_last_opp", TickersLastOpp.class);
     }
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, TickersMetadata> metadataTickerKafkaListenerContainerFactory() {
-        return createKafkaListenerContainerFactory("group_id", TickersMetadata.class);
+        return createKafkaListenerContainerFactory("group_metadata", TickersMetadata.class);
     }
 }
