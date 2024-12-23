@@ -1,6 +1,7 @@
 package com.app.mongo.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -9,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Document
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TickerMetaDataMongo {
 
     private String symbol;
