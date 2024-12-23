@@ -5,12 +5,12 @@ import com.app.kafka.utils.schema.tickersLastOpp.TickersLastOpp;
 import com.app.kafka.service.producer.KafkaSender;
 import com.app.kafka.utils.schema.tickersMetaData.TickersMetadata;
 import com.app.mongo.entities.TickersLastOppMongo;
-import com.app.mongo.service.TickerLastOppService;
 import com.app.mongo.service.TickersCommonService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -22,11 +22,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/kafka")
-public class KafkaController {
+public class Controller {
 
-    private static final Logger logger = LoggerFactory.getLogger(KafkaController.class);
+    private static final Logger logger = LoggerFactory.getLogger(Controller.class);
     private final TickersCommonService tickersCommonService;
-    private final TickerLastOppService tickerLastOppService;
     private static final String HEADER_API_KEY = "x-rapidapi-key";
     private static final String HEADER_API_HOST = "x-rapidapi-host";
     private final KafkaSender kafkaSender;
@@ -45,16 +44,15 @@ public class KafkaController {
     @Value("${rapidapi.tickers.metadata.base.url}")
     private String tickerMetaDataApiUrl;
 
-    public KafkaController(TickersCommonService tickersCommonService, TickerLastOppService tickerLastOppService, KafkaSender kafkaSender) {
+    public Controller(TickersCommonService tickersCommonService, KafkaSender kafkaSender) {
         this.tickersCommonService = tickersCommonService;
-        this.tickerLastOppService = tickerLastOppService;
         this.kafkaSender = kafkaSender;
         this.httpClient = HttpClient.newHttpClient();
         this.objectMapper = new ObjectMapper();
     }
 
     @PostMapping("/sendTickersLastOpp")
-    public String sendLastOppMessage(@RequestParam int pageNumber) {
+    public ResponseEntity<String> sendLastOppMessage(@RequestParam int pageNumber) {
         try {
             String url = tickersLastOppApiUrl + pageNumber;
             String responseBody = sendHttpRequest(url);
@@ -63,15 +61,15 @@ public class KafkaController {
             kafkaSender.sendTickerLastOppMessage(tickersLastOpp);
 
             logger.info("TickersLastOpp message successfully sent to Kafka.");
-            return "Message was successfully sent to Kafka!";
+            return ResponseEntity.ok("Message was successfully sent to Kafka!");
         } catch (Exception e) {
             logger.error("Failed to send TickersLastOpp message to Kafka.", e);
-            return "Failed to send message to Kafka: " + e.getMessage();
+            return ResponseEntity.badRequest().body("Failed to send message to Kafka: " + e.getMessage());
         }
     }
 
     @PostMapping("/sendMetadataMessage")
-    public String sendMetadataMessage() {
+    public ResponseEntity<String> sendMetadataMessage() {
         try {
             String responseBody = sendHttpRequest(tickerMetaDataApiUrl);
 
@@ -79,12 +77,33 @@ public class KafkaController {
             kafkaSender.sendTickerMetaDataOppMessage(tickersMetadata);
 
             logger.info("TickersMetadata message successfully sent to Kafka.");
-            return "Message was successfully sent to Kafka!";
+            return ResponseEntity.ok("Message was successfully sent to Kafka!");
         } catch (Exception e) {
             logger.error("Failed to send TickersMetadata message to Kafka.", e);
-            return "Failed to send message to Kafka: " + e.getMessage();
+            return ResponseEntity.badRequest().body("Failed to send message to Kafka: " + e.getMessage());
         }
     }
+
+    @GetMapping("/tickers-with-info")
+    public ResponseEntity<List<TickerLastOppAggregatedDTO>> getTickersWithInfo() {
+        try {
+            return ResponseEntity.ok(tickersCommonService.getTickersWithInfo());
+        }
+        catch(Exception e){
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping("/tickers")
+    public ResponseEntity<List<TickersLastOppMongo>> getTickersByLastSale(@RequestParam Double minLastSale) {
+        try{
+            return ResponseEntity.ok().body(tickersCommonService.getTickersByLastSaleGreaterThanEqual(minLastSale));
+        }
+        catch(Exception e){
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
     private String sendHttpRequest(String url) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -98,15 +117,5 @@ public class KafkaController {
             throw new IOException("Failed request with status code: " + response.statusCode());
         }
         return response.body();
-    }
-
-    @GetMapping("/tickers-with-info")
-    public List<TickerLastOppAggregatedDTO> getTickersWithInfo() {
-        return tickersCommonService.getTickersWithInfo();
-    }
-
-    @GetMapping("/tickers")
-    public List<TickersLastOppMongo> getTickersByLastSale(@RequestParam Double minLastSale) {
-        return tickerLastOppService.getTickersByLastSaleGreaterThanEqual(minLastSale);
     }
 }

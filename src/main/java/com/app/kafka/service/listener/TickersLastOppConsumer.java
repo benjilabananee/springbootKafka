@@ -1,5 +1,6 @@
 package com.app.kafka.service.listener;
 
+import com.app.mongo.service.TickersCommonService;
 import com.app.mongo.service.TreatmentOfDataService;
 import com.app.kafka.utils.schema.tickersLastOpp.Body;
 import com.app.kafka.utils.schema.tickersLastOpp.TickersLastOpp;
@@ -16,12 +17,12 @@ import org.slf4j.LoggerFactory;
 @Service
 public class TickersLastOppConsumer {
 
-    private final TickerLastOppService tickerLastOppService;
+    private final TickersCommonService tickersCommonService;
     private final TreatmentOfDataService treatmentOfDataService;
     private static final Logger log = LoggerFactory.getLogger(TickersLastOppConsumer.class);
 
-    public TickersLastOppConsumer(TickerLastOppService tickerLastOppService, TreatmentOfDataService treatmentOfDataService, ObjectMapper objectMapper) {
-        this.tickerLastOppService = tickerLastOppService;
+    public TickersLastOppConsumer(TickersCommonService tickersCommonService, TreatmentOfDataService treatmentOfDataService) {
+        this.tickersCommonService = tickersCommonService;
         this.treatmentOfDataService = treatmentOfDataService;
     }
 
@@ -41,7 +42,7 @@ public class TickersLastOppConsumer {
                     tickersLastOppMongo.setCurrency(treatmentOfDataService.extractCurrencyFromInput(body.getLastsale()));
                     tickersLastOppMongo.setMarketCap(body.getMarketCap());
 
-                    tickerLastOppService.saveLastOpp(tickersLastOppMongo);
+                    tickersCommonService.saveLastOpp(tickersLastOppMongo);
                 } catch (Exception e) {
                     log.error("Error processing body: {}", body, e);
                 }
