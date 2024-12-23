@@ -22,6 +22,4 @@ public class TickerMetadataService {
         tickerMetaDataRepository.save(tickerMetaDataMongo);
     }
 
-
-
 }
