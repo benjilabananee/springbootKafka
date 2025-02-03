@@ -124,7 +124,6 @@ public class Controller {
 
 
     private <T> T getCachedResponse(String cacheKey, Class<T> type) throws IOException {
-
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
         String cachedResponse = ops.get(cacheKey);
         return cachedResponse != null ? objectMapper.readValue(cachedResponse, type) : null;
