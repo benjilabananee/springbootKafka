@@ -9,16 +9,19 @@ import com.app.mongo.service.TickersCommonService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/kafka")
@@ -26,6 +29,8 @@ public class Controller {
 
     private static final Logger logger = LoggerFactory.getLogger(Controller.class);
     private final TickersCommonService tickersCommonService;
+    @Autowired
+    private  StringRedisTemplate redisTemplate;
     private static final String HEADER_API_KEY = "x-rapidapi-key";
     private static final String HEADER_API_HOST = "x-rapidapi-host";
     private final KafkaSender kafkaSender;
@@ -44,6 +49,8 @@ public class Controller {
     @Value("${rapidapi.tickers.metadata.base.url}")
     private String tickerMetaDataApiUrl;
 
+    private static final long CACHE_TTL = 3600;
+
     public Controller(TickersCommonService tickersCommonService, KafkaSender kafkaSender) {
         this.tickersCommonService = tickersCommonService;
         this.kafkaSender = kafkaSender;
@@ -53,33 +60,44 @@ public class Controller {
 
     @PostMapping("/sendTickersLastOpp")
     public ResponseEntity<String> sendLastOppMessage(@RequestParam int pageNumber) {
+        String cacheKey = "tickersLastOpp:" + pageNumber;
         try {
-            String url = tickersLastOppApiUrl + pageNumber;
-            String responseBody = sendHttpRequest(url);
+            TickersLastOpp tickersLastOpp = getCachedResponse(cacheKey, TickersLastOpp.class);
+            if (tickersLastOpp != null) {
+                kafkaSender.sendTickerLastOppMessage(tickersLastOpp);
+                return ResponseEntity.ok("Message was successfully sent to Kafka (from cache)!");
+            }
 
-            TickersLastOpp tickersLastOpp = objectMapper.readValue(responseBody, TickersLastOpp.class);
+            String url = String.format("%s%d", tickersLastOppApiUrl, pageNumber);
+            tickersLastOpp = fetchAndCacheResponse(url, cacheKey, TickersLastOpp.class);
+
             kafkaSender.sendTickerLastOppMessage(tickersLastOpp);
-
-            logger.info("TickersLastOpp message successfully sent to Kafka.");
             return ResponseEntity.ok("Message was successfully sent to Kafka!");
         } catch (Exception e) {
-            logger.error("Failed to send TickersLastOpp message to Kafka.", e);
+            logger.error("Error sending last opportunity message", e);
             return ResponseEntity.badRequest().body("Failed to send message to Kafka: " + e.getMessage());
         }
     }
 
+
     @PostMapping("/sendMetadataMessage")
-    public ResponseEntity<String> sendMetadataMessage() {
+    public ResponseEntity<String> sendMetadataMessage(@RequestParam String searchParam) {
+
+        String cacheKey = "TickersMetaData:" + searchParam.toUpperCase();
         try {
-            String responseBody = sendHttpRequest(tickerMetaDataApiUrl);
+            TickersMetadata tickersMetadata = getCachedResponse(cacheKey, TickersMetadata.class);
+            if (tickersMetadata != null) {
+                kafkaSender.sendTickerMetaDataOppMessage(tickersMetadata);
+                return ResponseEntity.ok("Message was successfully sent to Kafka (from cache)!");
+            }
 
-            TickersMetadata tickersMetadata = objectMapper.readValue(responseBody, TickersMetadata.class);
+            String url = String.format("%s%s", tickerMetaDataApiUrl, searchParam.toUpperCase());
+            tickersMetadata = fetchAndCacheResponse(url, cacheKey, TickersMetadata.class);
+
             kafkaSender.sendTickerMetaDataOppMessage(tickersMetadata);
-
-            logger.info("TickersMetadata message successfully sent to Kafka.");
             return ResponseEntity.ok("Message was successfully sent to Kafka!");
         } catch (Exception e) {
-            logger.error("Failed to send TickersMetadata message to Kafka.", e);
+            logger.error("Error sending metadata message", e);
             return ResponseEntity.badRequest().body("Failed to send message to Kafka: " + e.getMessage());
         }
     }
@@ -102,6 +120,21 @@ public class Controller {
         catch(Exception e){
             return ResponseEntity.badRequest().body(null);
         }
+    }
+
+
+    private <T> T getCachedResponse(String cacheKey, Class<T> type) throws IOException {
+
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+        String cachedResponse = ops.get(cacheKey);
+        return cachedResponse != null ? objectMapper.readValue(cachedResponse, type) : null;
+    }
+
+    private <T> T fetchAndCacheResponse(String url, String cacheKey, Class<T> type) throws IOException, InterruptedException {
+        String responseBody = sendHttpRequest(url);
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+        ops.set(cacheKey, responseBody, CACHE_TTL, TimeUnit.SECONDS);
+        return objectMapper.readValue(responseBody, type);
     }
 
     private String sendHttpRequest(String url) throws IOException, InterruptedException {

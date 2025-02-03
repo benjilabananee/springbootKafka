@@ -5,7 +5,6 @@ import com.app.mongo.service.TreatmentOfDataService;
 import com.app.kafka.utils.schema.tickersLastOpp.Body;
 import com.app.kafka.utils.schema.tickersLastOpp.TickersLastOpp;
 import com.app.mongo.entities.TickersLastOppMongo;
-import com.app.mongo.service.TickerLastOppService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
